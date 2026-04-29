@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "185253795624",
+    "project_id": "diet-maker-8bfa3",
+    "storage_bucket": "diet-maker-8bfa3.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185253795624:android:c8ef1c068d2d05b6c2621d",
+        "android_client_info": {
+          "package_name": "com.sm.dietmaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN3hCuIhosCMJEsoNgir36MWbHCqTl2JI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "185253795624-9ai86up7a4qotk7ckah5k1ke9isp3oce.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sm.dietmaker",
+                "app_store_id": "1591384918"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
