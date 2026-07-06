@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "185253795624-0vdvsaq47etc32nkps4rbohhn2pf76nq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sm.dietmaker",
+            "certificate_hash": "5d2177d920e884095b6196d7bf55c8d2f1b80e31"
+          }
+        },
+        {
           "client_id": "185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com",
           "client_type": 3
         }

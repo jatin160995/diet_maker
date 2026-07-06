@@ -2,6 +2,7 @@ import 'package:diet_maker/Screens/MyProgress/ChartModels/measurement_chart_data
 import 'package:diet_maker/services/storage_service.dart';
 import 'package:diet_maker/utils/color_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class MeasurementChart extends StatefulWidget {
@@ -19,13 +20,17 @@ class _MeasurementChartState extends State<MeasurementChart> {
   getPrefferedMeasurement() async {
     prefMeasurement =
         (await StorageService.getLoginData())?.profile.preferredMeasurement;
-    // userGender = (await StorageService.getLoginData())?.profile.gender;
     setState(() {});
   }
 
   @override
+  void initState() {
+    getPrefferedMeasurement();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // Parse the JSON data
     final chartSeriesData = parseMeasurementData(widget.data);
 
     return Container(
@@ -38,8 +43,10 @@ class _MeasurementChartState extends State<MeasurementChart> {
         tooltipBehavior: TooltipBehavior(enable: true),
         legend: Legend(isVisible: true, position: LegendPosition.bottom),
 
-        primaryXAxis: CategoryAxis(
+        primaryXAxis: DateTimeAxis(
           title: AxisTitle(text: 'Date'),
+          intervalType: DateTimeIntervalType.days,
+          dateFormat: DateFormat.Md(),
           majorGridLines: const MajorGridLines(width: 0),
         ),
 
@@ -53,25 +60,21 @@ class _MeasurementChartState extends State<MeasurementChart> {
           majorGridLines: const MajorGridLines(width: 0.5),
         ),
 
-        // Create multiple line series dynamically
-        series:
-            chartSeriesData.map<LineSeries<MeasurementChartData, String>>((
-              seriesData,
-            ) {
-              return LineSeries<MeasurementChartData, String>(
-                name: seriesData['label'],
-                dataSource: seriesData['data'],
-                color: _hexToColor(seriesData['color']),
-                xValueMapper: (MeasurementChartData data, _) => data.dateLabel,
-                yValueMapper:
-                    (MeasurementChartData data, _) => data.measurement,
-                markerSettings: const MarkerSettings(
-                  isVisible: true,
-                  shape: DataMarkerType.circle,
-                ),
-                width: 2,
-              );
-            }).toList(),
+        series: chartSeriesData
+            .map<LineSeries<MeasurementChartData, DateTime>>((seriesData) {
+          return LineSeries<MeasurementChartData, DateTime>(
+            name: seriesData['label'],
+            dataSource: seriesData['data'],
+            color: _hexToColor(seriesData['color']),
+            xValueMapper: (MeasurementChartData data, _) => data.date,
+            yValueMapper: (MeasurementChartData data, _) => data.measurement,
+            markerSettings: const MarkerSettings(
+              isVisible: true,
+              shape: DataMarkerType.circle,
+            ),
+            width: 2,
+          );
+        }).toList(),
       ),
     );
   }
@@ -87,15 +90,25 @@ class _MeasurementChartState extends State<MeasurementChart> {
         String lineColor = bodyPart['line_color'];
         List<dynamic> dataPoints = bodyPart['data'];
 
-        List<MeasurementChartData> chartData =
-            dataPoints.map((point) {
-              return MeasurementChartData(
-                dateLabel: point['log_date_formatted'], // e.g., "09/18"
-                measurement: (point['measurement'] as num).toDouble(),
-              );
-            }).toList();
+        List<MeasurementChartData> chartData = dataPoints
+            .where((point) => point['log_date'] != null)
+            .map((point) {
+          // Parse the actual date from log_date (e.g., "2024-06-21")
+          DateTime parsedDate = DateTime.tryParse(
+                  point['log_date'].toString()) ??
+              DateTime.now();
 
-        parsedData.add({"label": label, "color": lineColor, "data": chartData});
+          return MeasurementChartData(
+            date: parsedDate,
+            measurement: (point['measurement'] as num).toDouble(),
+          );
+        }).toList();
+
+        // Sort by date so lines draw correctly oldest → newest
+        chartData.sort((a, b) => a.date.compareTo(b.date));
+
+        parsedData
+            .add({"label": label, "color": lineColor, "data": chartData});
       }
     }
 
@@ -106,7 +119,7 @@ class _MeasurementChartState extends State<MeasurementChart> {
   Color _hexToColor(String hex) {
     hex = hex.replaceAll('#', '');
     if (hex.length == 6) {
-      hex = 'FF$hex'; // Add opacity if missing
+      hex = 'FF$hex';
     }
     return Color(int.parse(hex, radix: 16));
   }

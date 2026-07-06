@@ -163,8 +163,13 @@ class _CoachingState extends State<Coaching> {
       Map data = await apiService.postWithToken(submitCoaching, mapToSend);
       if (data['success']) {
         hideLoadingDialog(context);
-        showToast(
+        // showToast(
+        //   "Thank you! Our coaching team will review your request and get back to you soon.",
+        // );
+        showLongToast(
+          context,
           "Thank you! Our coaching team will review your request and get back to you soon.",
+          seconds: 8,
         );
         Navigator.pop(context, true);
       }

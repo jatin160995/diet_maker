@@ -729,18 +729,24 @@ class _DashboardState extends State<Dashboard> with RouteAware {
                   );
                 },
               ),
-              OptionWidget(
-                Icons.calculate_outlined,
-                "My Meal Plan Calculator",
-                () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => MyMealPlanCalculator(),
-                    ),
-                  );
-                },
-              ),
+              // OptionWidget(
+              //   Icons.calculate_outlined,
+              //   "My Meal Plan Calculator",
+              //   () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => MyMealPlanCalculator(),
+              //       ),
+              //     );
+              //   },
+              // ),
+              OptionWidget(Icons.edit_note_sharp, "My Meal Plans", () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyMealPlan()),
+                );
+              }),
               OptionWidget(Icons.calendar_month_outlined, "My Calendar", () {
                 Navigator.push(
                   context,
@@ -772,12 +778,6 @@ class _DashboardState extends State<Dashboard> with RouteAware {
                   );
                 },
               ),
-              OptionWidget(Icons.edit_note_sharp, "My Meal Plans", () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyMealPlan()),
-                );
-              }),
             ],
           ),
         ],
@@ -1189,11 +1189,43 @@ class _DashboardState extends State<Dashboard> with RouteAware {
 
       // Check if today is between start & end (inclusive)
       if (!today.isBefore(start) && !today.isAfter(end)) {
+        // showToast((item['id'].toString()));
         return item['id'];
       }
     }
 
     return 0; // No matching schedule found
+  }
+
+  int? getActiveMealPlanId(List schedules) {
+    final today = DateTime.now();
+    final todayDate = DateTime(
+      today.year,
+      today.month,
+      today.day,
+    ); // strip time
+
+    for (final item in schedules) {
+      final start = DateTime.parse(item['start_date']);
+      final end = DateTime.parse(item['end_date']);
+
+      // Check if today falls within this schedule
+      if (!todayDate.isBefore(start) && !todayDate.isAfter(end)) {
+        final List mealPlans = item['schedule_meal_plans'];
+
+        if (mealPlans.isEmpty) return null;
+
+        // Days elapsed since start (0-based)
+        final int dayIndex = todayDate.difference(start).inDays;
+
+        // Cycle through meal plans using modulo
+        final int cycleIndex = dayIndex % mealPlans.length;
+
+        return mealPlans[cycleIndex]['meal_plan_id'];
+      }
+    }
+
+    return null; // No active schedule
   }
 
   List schedulesFromServer = [];
@@ -1210,6 +1242,7 @@ class _DashboardState extends State<Dashboard> with RouteAware {
       Map data = await apiService.getWithToken(getSchedule, {});
       setState(() {
         schedulesFromServer = data['table']['data'];
+        _getMealPlansRequest(getActiveMealPlanId(schedulesFromServer)!);
         _isLoading = false;
       });
 
@@ -1325,7 +1358,7 @@ class _DashboardState extends State<Dashboard> with RouteAware {
         } else {
           scheduleToday = true;
           todayMealPlanId = adherenceForToday[0]['log']['meal_plan_id'];
-          _getMealPlansRequest(adherenceForToday[0]['log']['meal_plan_id']);
+          // _getMealPlansRequest(adherenceForToday[0]['log']['meal_plan_id']);
         }
       });
       print("Adherence-" + data.toString());

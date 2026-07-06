@@ -14,18 +14,22 @@ class SingleItemDescription extends StatefulWidget {
 class _SingleItemDescriptionState extends State<SingleItemDescription> {
   @override
   Widget build(BuildContext context) {
-    var protein =
-        widget.itemData['food_serving_size']['protein'] *
-        widget.itemData['food_amount'];
-    var carbs =
-        widget.itemData['food_serving_size']['carbohydrate'] *
-        widget.itemData['food_amount'];
-    var fat =
-        widget.itemData['food_serving_size']['fat'] *
-        widget.itemData['food_amount'];
-    var calories =
-        widget.itemData['food_serving_size']['calorie'] *
-        widget.itemData['food_amount'];
+    var protein = widget.itemData['daily_macro_nutrient']['protein_amount'];
+    var carbs = widget.itemData['daily_macro_nutrient']['carbohydrate_amount'];
+    var fat = widget.itemData['daily_macro_nutrient']['fat_amount'];
+    var calories = widget.itemData['daily_macro_nutrient']['calorie_amount'];
+    // var protein =
+    //     widget.itemData['food_serving_size']['protein'] *
+    //     widget.itemData['food_amount'];
+    // var carbs =
+    //     widget.itemData['food_serving_size']['carbohydrate'] *
+    //     widget.itemData['food_amount'];
+    // var fat =
+    //     widget.itemData['food_serving_size']['fat'] *
+    //     widget.itemData['food_amount'];
+    // var calories =
+    //     widget.itemData['food_serving_size']['calorie'] *
+    //     widget.itemData['food_amount'];
     return GestureDetector(
       onTap: () {
         Navigator.push(

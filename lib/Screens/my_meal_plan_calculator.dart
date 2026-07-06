@@ -423,6 +423,9 @@ class _MyMealPlanCalculatorState extends State<MyMealPlanCalculator>
   List<Widget> recipeWidget(List recipes, int meal_id, dynamic mealPlan) {
     List<Widget> foodWidgetsList = [];
     for (int i = 0; i < recipes.length; i++) {
+      if (recipes[i]['recipe'] == null) {
+        continue;
+      }
       foodWidgetsList.add(SingleRecipeItemDescription(recipes[i], mealPlan));
     }
     // foodWidgetsList.add(
@@ -579,7 +582,7 @@ class _MyMealPlanCalculatorState extends State<MyMealPlanCalculator>
       print(data);
     } catch (e) {
       if (e is ApiException) {
-        showToast(e.message.toString());
+        //showToast(e.message.toString());
         print(
           "API Error: ${e.message}, status: ${e.code}, Details: ${e.errorBody}",
         );

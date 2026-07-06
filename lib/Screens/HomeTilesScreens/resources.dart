@@ -121,6 +121,7 @@ import 'package:diet_maker/utils/api_endpoints.dart';
 import 'package:diet_maker/utils/app_helpers.dart';
 import 'package:diet_maker/utils/color_utils.dart';
 import 'package:diet_maker/utils/design_utils.dart';
+import 'package:diet_maker/utils/globals.dart';
 import 'package:diet_maker/widgets/app_popups.dart';
 import 'package:diet_maker/widgets/custom_edit_text.dart';
 import 'package:diet_maker/widgets/small_heading.dart';
@@ -228,6 +229,13 @@ class _ResourcesScreenState extends State<ResourcesScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            Container(
+              decoration: borderRadius(white, 20),
+              clipBehavior: Clip.antiAlias,
+              child: Image.asset(imagesPath + "newsletter.png"),
+            ),
+            SizedBox(height: 20),
+
             const Text(
               'Subscribe to our newsletter for fitness tips and updates!',
               style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.w500),

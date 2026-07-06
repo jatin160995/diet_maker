@@ -259,7 +259,7 @@ class _ProfileState extends State<Profile> {
                         }),
                         OptionWidget(
                           Icons.delete_outlined,
-                          "Deactivate Account",
+                          "Delete Account",
                           () {
                             Navigator.push(
                               context,

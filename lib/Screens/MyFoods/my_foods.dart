@@ -118,12 +118,16 @@ class _MyfoodsState extends State<Myfoods> {
           children: [
             SmallHeading(
               "Serving Size: " +
-                  servingSizes[i]['serving_value'].toString() +
+                  servingSizes[i]['serving_value'].toStringAsFixed(0) +
                   " " +
                   servingSizes[i]['serving_size_unit']['unit'],
             ),
             SmallHeading(
-              "Calories: " + servingSizes[i]['calorie'].toString() + "kcal",
+              "Calories: " +
+                  (servingSizes[i]['calorie'] *
+                          servingSizes[i]['serving_value'])
+                      .toStringAsFixed(1) +
+                  "kcal",
             ),
           ],
         ),

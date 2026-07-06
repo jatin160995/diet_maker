@@ -8,6 +8,7 @@ class StorageService {
   static const String _tokenKey = 'access_token';
   static const String _profileKey = 'user_profile';
   static const String _dietPrefKey = 'dietary_preference';
+  static const String _fcmTokenKey = 'fcm_token';
 
   /// Save login response
   static Future<void> saveLoginData(LoginResponse login) async {
@@ -52,5 +53,17 @@ class StorageService {
   static Future<String?> getToken() async {
     final prefs = await SharedPreferences.getInstance();
     return prefs.getString(_tokenKey);
+  }
+
+  /// Save FCM token
+  static Future<void> saveFcmToken(String token) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_fcmTokenKey, token);
+  }
+
+  /// Retrieve FCM token
+  static Future<String?> getFcmToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_fcmTokenKey);
   }
 }

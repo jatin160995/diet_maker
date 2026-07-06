@@ -136,18 +136,25 @@ class _MyFoodItemDetailState extends State<MyFoodItemDetail> {
             //SizedBox(height: 5),
             Text(
               "Protein: " +
-                  servingSizes[i]['protein'].toString() +
+                  (servingSizes[i]['protein'] *
+                          servingSizes[i]['serving_value'])
+                      .toStringAsFixed(2) +
                   "g / " +
                   "Carbs: " +
-                  servingSizes[i]['carbohydrate'].toString() +
+                  (servingSizes[i]['carbohydrate'] *
+                          servingSizes[i]['serving_value'])
+                      .toStringAsFixed(2) +
                   "g / " +
                   "Fat: " +
-                  servingSizes[i]['fat'].toString() +
+                  (servingSizes[i]['fat'] * servingSizes[i]['serving_value'])
+                      .toStringAsFixed(2) +
                   "g",
               style: TextStyle(color: textMedium(), fontSize: 14),
             ),
             Text(
-              servingSizes[i]['calorie'].toString() + " kcal",
+              (servingSizes[i]['calorie'] * servingSizes[i]['serving_value'])
+                      .toStringAsFixed(2) +
+                  " kcal",
               style: TextStyle(
                 color: textMedium(),
                 fontSize: 15,

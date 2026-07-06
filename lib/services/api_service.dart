@@ -1,15 +1,28 @@
 // lib/services/api_service.dart
 import 'dart:convert';
 import 'package:diet_maker/Exception/api_exception.dart';
+import 'package:diet_maker/main.dart';
 import 'package:diet_maker/services/storage_service.dart';
 import 'package:diet_maker/utils/api_endpoints.dart';
+import 'package:diet_maker/utils/app_helpers.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
+  static Future<void> _handleUnauthorized() async {
+    await StorageService.clearLoginData();
+
+    // Navigate to login from anywhere in the app
+    navigatorKey.currentState?.pushNamedAndRemoveUntil('/login', (_) => false);
+  }
+
   //--------------------------Get Request----------------------//
   Future<dynamic> get(String endpoint) async {
     final response = await http.get(Uri.parse('$baseUrl$endpoint'));
     print('$baseUrl$endpoint');
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
@@ -40,6 +53,10 @@ class ApiService {
       },
     );
     print(response.body);
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     // print(response.statusCode);
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -61,7 +78,10 @@ class ApiService {
       headers: {"Content-Type": "application/json"},
       body: json.encode(body),
     );
-
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
     } else {
@@ -91,6 +111,10 @@ class ApiService {
     );
     print(response.body);
     print(response.statusCode);
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
     } else {
@@ -123,6 +147,10 @@ class ApiService {
       body: jsonEncode(body),
     );
     print(response.body);
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
     } else {
@@ -155,6 +183,10 @@ class ApiService {
       body: jsonEncode(body),
     );
     print(response.body);
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
     } else {
@@ -190,6 +222,7 @@ class ApiService {
     String? token = (await StorageService.getLoginData())?.accessToken;
     print('$baseUrl$endpoint');
     print(token);
+
     final response = await http.delete(
       Uri.parse('$baseUrl$endpoint'),
       headers: {
@@ -199,6 +232,10 @@ class ApiService {
         ...?headers,
       },
     );
+    if (response.statusCode == 401) {
+      await _handleUnauthorized();
+      return showToast("Session expired. Please login again.");
+    }
     // print(response.body);
     // print(response.statusCode);
     if (response.statusCode == 200) {
@@ -252,7 +289,10 @@ class ApiService {
 
       print("STATUS: ${response.statusCode}");
       print("RESPONSE: ${response.body}");
-
+      if (response.statusCode == 401) {
+        await _handleUnauthorized();
+        return showToast("Session expired. Please login again.");
+      }
       if (response.statusCode == 200 || response.statusCode == 201) {
         return json.decode(response.body);
       } else {

@@ -40,7 +40,7 @@ class _WeightChartState extends State<WeightChart> {
         backgroundColor: Colors.white,
         title: ChartTitle(text: 'Weight Progress'),
         legend: Legend(isVisible: false),
-        tooltipBehavior: TooltipBehavior(enable: true),
+        tooltipBehavior: TooltipBehavior(enable: true,  header: '',),
         primaryXAxis: DateTimeAxis(
           title: AxisTitle(text: 'Date'),
           intervalType: DateTimeIntervalType.days,

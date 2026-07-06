@@ -657,7 +657,7 @@ class _EditProfileState extends State<EditProfile> {
       dataToPost["weight_kg"] = weightController.text;
     }
 
-    //print(dataToPost);
+    // print(dataToPost);
     //return;
     setState(() {
       _isLoadingDietary = true;

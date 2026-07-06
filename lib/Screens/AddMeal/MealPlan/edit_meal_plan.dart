@@ -127,7 +127,8 @@ class _EditMealPlanScreenState extends State<EditMealPlanScreen> {
     } catch (e) {
       hideLoadingDialog(context);
       if (e is ApiException) {
-        showToast(e.message.toString());
+        //showToast(e.message.toString());
+        showLongToast(context, e.message.toString(), seconds: 10);
         print("API Error: ${e.message}, status: ${e.code}");
       } else {
         showToast("Unexpected error while deleting meal plan.");

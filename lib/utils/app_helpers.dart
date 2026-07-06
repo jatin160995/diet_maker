@@ -17,6 +17,22 @@ void showToast(String message) {
   );
 }
 
+void showLongToast(BuildContext context, String message, {int seconds = 6}) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white, fontSize: 16.0),
+      ),
+      backgroundColor: darkText,
+      duration: Duration(seconds: seconds),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      margin: const EdgeInsets.only(bottom: 20, left: 16, right: 16),
+    ),
+  );
+}
+
 void showToastLong(String message) {
   Fluttertoast.showToast(
     msg: message,

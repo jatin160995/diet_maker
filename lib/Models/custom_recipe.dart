@@ -63,6 +63,7 @@ class FoodServingSize {
   final double carbohydrate;
   final double fat;
   final double calorie;
+  final String measurementUnit;
 
   const FoodServingSize({
     required this.id,
@@ -72,6 +73,7 @@ class FoodServingSize {
     required this.carbohydrate,
     required this.fat,
     required this.calorie,
+    required this.measurementUnit,
   });
 
   factory FoodServingSize.fromJson(Map<String, dynamic> j) => FoodServingSize(
@@ -82,6 +84,7 @@ class FoodServingSize {
     carbohydrate: (j['carbohydrate'] ?? 0).toDouble(),
     fat: (j['fat'] ?? 0).toDouble(),
     calorie: (j['calorie'] ?? 0).toDouble(),
+    measurementUnit: (j['serving_size_unit']?['unit'] ?? '').toString(),
   );
 
   static List<FoodServingSize> listFromFoodResponse(dynamic json) {

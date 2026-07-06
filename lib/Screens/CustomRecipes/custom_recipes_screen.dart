@@ -119,195 +119,207 @@ class _CustomRecipesScreenState extends State<CustomRecipesScreen> {
       builder:
           (_) => StatefulBuilder(
             builder: (ctx, setSht) {
-              return DraggableScrollableSheet(
-                expand: false,
-                initialChildSize: 0.75,
-                maxChildSize: 0.95,
-                builder:
-                    (_, scroll) => ListView(
-                      controller: scroll,
-                      padding: const EdgeInsets.all(20),
-                      children: [
-                        // Title + image
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    recipe.title,
-                                    style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w500,
-                                    ),
-                                  ),
-                                  if (recipe.categoryTitle.isNotEmpty) ...[
-                                    const SizedBox(height: 4),
+              return GestureDetector(
+                onTap: () {
+                  dismissKeyboard(ctx);
+                },
+                behavior: HitTestBehavior.opaque,
+                child: DraggableScrollableSheet(
+                  expand: false,
+                  initialChildSize: 0.75,
+                  maxChildSize: 0.95,
+                  builder:
+                      (_, scroll) => ListView(
+                        controller: scroll,
+                        padding: const EdgeInsets.all(20),
+                        children: [
+                          // Title + image
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
                                     Text(
-                                      recipe.categoryTitle,
-                                      style: TextStyle(
-                                        color: textLightest(),
-                                        fontSize: 12,
+                                      recipe.title,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w500,
                                       ),
                                     ),
+                                    if (recipe.categoryTitle.isNotEmpty) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        recipe.categoryTitle,
+                                        style: TextStyle(
+                                          color: textLightest(),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ],
-                                ],
-                              ),
-                            ),
-                            if (recipe.imageUrl.isNotEmpty)
-                              Container(
-                                width: 72,
-                                height: 72,
-                                margin: const EdgeInsets.only(left: 12),
-                                clipBehavior: Clip.antiAlias,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                child: LoadingImage(recipe.imageUrl),
                               ),
-                          ],
-                        ),
-                        const Divider(height: 24),
-
-                        // Macros
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _macroTile(
-                              'Protein',
-                              recipe.protein.toStringAsFixed(1) + 'g',
-                              protien,
-                            ),
-                            _macroTile(
-                              'Carbs',
-                              recipe.carbohydrate.toStringAsFixed(1) + 'g',
-                              carbs,
-                            ),
-                            _macroTile(
-                              'Fat',
-                              recipe.fat.toStringAsFixed(1) + 'g',
-                              fats,
-                            ),
-                            _macroTile(
-                              'Calories',
-                              recipe.calorie.toStringAsFixed(0) + ' kcal',
-                              calories,
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-
-                        if (recipe.description.isNotEmpty) ...[
-                          _sheetHeading('Description'),
-                          Text(
-                            recipe.description,
-                            style: TextStyle(
-                              color: textMedium(),
-                              fontSize: 14,
-                              height: 1.55,
-                            ),
+                              if (recipe.imageUrl.isNotEmpty)
+                                Container(
+                                  width: 72,
+                                  height: 72,
+                                  margin: const EdgeInsets.only(left: 12),
+                                  clipBehavior: Clip.antiAlias,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: LoadingImage(recipe.imageUrl),
+                                ),
+                            ],
                           ),
-                          const SizedBox(height: 14),
-                        ],
-                        if (recipe.ingredients.isNotEmpty) ...[
-                          _sheetHeading('Ingredients'),
-                          Text(
-                            recipe.ingredients,
-                            style: TextStyle(
-                              color: textMedium(),
-                              fontSize: 14,
-                              height: 1.55,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                        ],
-                        if (recipe.instructions.isNotEmpty) ...[
-                          _sheetHeading('Instructions'),
-                          Text(
-                            recipe.instructions,
-                            style: TextStyle(
-                              color: textMedium(),
-                              fontSize: 14,
-                              height: 1.55,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                        ],
-                        if (recipe.substitution.isNotEmpty) ...[
-                          _sheetHeading('Substitutions'),
-                          Text(
-                            recipe.substitution,
-                            style: TextStyle(
-                              color: textMedium(),
-                              fontSize: 14,
-                              height: 1.55,
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                        ],
-
-                        // Add-to-meal controls (pick mode)
-                        if (_pickMode) ...[
                           const Divider(height: 24),
-                          Text(
-                            'Servings',
-                            style: TextStyle(color: textMedium(), fontSize: 12),
-                          ),
-                          const SizedBox(height: 6),
-                          CupertinoTextField(
-                            controller: _amountCtrl,
-                            keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true,
-                            ),
-                            placeholder: '1',
-                            onChanged: (v) {
-                              final parsed = double.tryParse(v);
-                              if (parsed != null)
-                                setSht(() => _servingAmount = parsed);
-                            },
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 10,
-                            ),
-                            decoration: BoxDecoration(
-                              color: backgroundColor(),
-                              border: Border.all(color: dividerColor),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
+
+                          // Macros
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              _macroTile(
+                                'Protein',
+                                recipe.protein.toStringAsFixed(1) + 'g',
+                                protien,
+                              ),
+                              _macroTile(
+                                'Carbs',
+                                recipe.carbohydrate.toStringAsFixed(1) + 'g',
+                                carbs,
+                              ),
+                              _macroTile(
+                                'Fat',
+                                recipe.fat.toStringAsFixed(1) + 'g',
+                                fats,
+                              ),
+                              _macroTile(
+                                'Calories',
+                                recipe.calorie.toStringAsFixed(0) + ' kcal',
+                                calories,
+                              ),
+                            ],
                           ),
                           const SizedBox(height: 16),
-                          SizedBox(
-                            width: double.infinity,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: primaryColor,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
+
+                          if (recipe.description.isNotEmpty) ...[
+                            _sheetHeading('Description'),
+                            Text(
+                              recipe.description,
+                              style: TextStyle(
+                                color: textMedium(),
+                                fontSize: 14,
+                                height: 1.55,
                               ),
-                              onPressed: () {
-                                Navigator.pop(ctx);
-                                _addToMeal(recipe);
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+                          if (recipe.ingredients.isNotEmpty) ...[
+                            _sheetHeading('Ingredients'),
+                            Text(
+                              recipe.ingredients,
+                              style: TextStyle(
+                                color: textMedium(),
+                                fontSize: 14,
+                                height: 1.55,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+                          if (recipe.instructions.isNotEmpty) ...[
+                            _sheetHeading('Instructions'),
+                            Text(
+                              recipe.instructions,
+                              style: TextStyle(
+                                color: textMedium(),
+                                fontSize: 14,
+                                height: 1.55,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+                          if (recipe.substitution.isNotEmpty) ...[
+                            _sheetHeading('Substitutions'),
+                            Text(
+                              recipe.substitution,
+                              style: TextStyle(
+                                color: textMedium(),
+                                fontSize: 14,
+                                height: 1.55,
+                              ),
+                            ),
+                            const SizedBox(height: 14),
+                          ],
+
+                          // Add-to-meal controls (pick mode)
+                          if (_pickMode) ...[
+                            const Divider(height: 24),
+                            Text(
+                              'Servings',
+                              style: TextStyle(
+                                color: textMedium(),
+                                fontSize: 12,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            CupertinoTextField(
+                              controller: _amountCtrl,
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => FocusScope.of(ctx).unfocus(),
+                              placeholder: '1',
+                              onChanged: (v) {
+                                final parsed = double.tryParse(v);
+                                if (parsed != null)
+                                  setSht(() => _servingAmount = parsed);
                               },
-                              child: const Text(
-                                'Add to meal',
-                                style: TextStyle(
-                                  color: white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: backgroundColor(),
+                                border: Border.all(color: dividerColor),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: double.infinity,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: primaryColor,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 14,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.pop(ctx);
+                                  _addToMeal(recipe);
+                                },
+                                child: const Text(
+                                  'Add to meal',
+                                  style: TextStyle(
+                                    color: white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                          ],
+                          const SizedBox(height: 20),
                         ],
-                        const SizedBox(height: 20),
-                      ],
-                    ),
+                      ),
+                ),
               );
             },
           ),

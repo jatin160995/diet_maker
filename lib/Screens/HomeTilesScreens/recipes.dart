@@ -255,7 +255,7 @@ class _RecipesState extends State<Recipes> {
               Text(data['ingredients']),
               Divider(height: 30, color: dividerColor),
 
-              heading("Substitution"),
+              heading("Substitutions"),
               Text(data['substitution'].toString()),
               Divider(height: 30, color: dividerColor),
 

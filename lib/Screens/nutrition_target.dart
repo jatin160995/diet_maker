@@ -125,6 +125,7 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
 
   getDetails() async {
     userDetail = (await StorageService.getLoginData())!;
+    //showToast(userDetail.dietaryPreference.primaryMealPlanId.toString());
     physicalGoalController.text = userDetail.dietaryPreference.physicalGoal;
 
     caloriesToMaintain =
@@ -178,7 +179,11 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
             ? true
             : false;
     print(userDetail.dietaryPreference.toJson());
-    calculateCaloriesToReachGoal();
+    caloriesToReachGoal = userDetail.dietaryPreference.dailyCalorieIntake;
+    // Future.delayed(Duration(milliseconds: 2500), () {
+    //   calculateCaloriesToReachGoal();
+    // });
+
     setState(() {});
     getNutritionTargetVariables();
   }
@@ -244,7 +249,10 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
       caloriesDifference =
           (caloriesToMaintain * ((selectedDifference + 10) / 100)).toInt();
     }
-    print(caloriesToReachGoal);
+    // showToast(
+    //   caloriesToReachGoal.toString() + "--" + caloriesDifference.toString(),
+    // );
+
     setState(() {});
   }
 
@@ -387,7 +395,7 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
                                         isGain
                                             ? caloriesHeadingsSurplusPercentage
                                             : caloriesHeadingsDeficitPercentage;
-                                    print(selectedPhysicalGoal);
+                                    // print(selectedPhysicalGoal);
                                     String unit =
                                         isImperial
                                             ? isPercentage

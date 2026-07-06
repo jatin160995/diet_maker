@@ -23,7 +23,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
     return Scaffold(
       backgroundColor: backgroundColor(),
       appBar: AppBar(
-        title: heading("Deactivate"),
+        title: heading("Delete"),
         backgroundColor: backgroundColor(),
       ),
       body: ListView(
@@ -31,7 +31,7 @@ class _DeleteAccountState extends State<DeleteAccount> {
         children: [
           SizedBox(height: 50),
           Text(
-            "Deactivate your account?",
+            "Delete your account?",
             textAlign: TextAlign.center,
             style: TextStyle(
               color: textDark(),
@@ -49,9 +49,9 @@ class _DeleteAccountState extends State<DeleteAccount> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    headingSmall("Deactivating your account is temporary"),
+                    headingSmall("Permanently Delete Your Account"),
                     Text(
-                      "Deactivating your account puts your profile on hold. Your meal plans, preferences, and progress data remain safe, but you won't receive notifications or be visible to other users. You can reactivate your account anytime by logging back in.",
+                      "Deleting your account permanently removes your profile, meal plans, preferences, and progress data from our system. You will no longer receive notifications or have access to your account. This action cannot be undone.",
                       style: TextStyle(color: textMedium(), fontSize: 13),
                     ),
                   ],
@@ -80,12 +80,12 @@ class _DeleteAccountState extends State<DeleteAccount> {
           //   ],
           // ),
           SizedBox(height: 30),
-          DefaultButton("Deactivate Account", isLoading: _isLoading, () {
+          DefaultButton("Delete Account", isLoading: _isLoading, () {
             showGenericDialog(
               context,
-              "Deactivate Accoount",
+              "Delete Accoount",
               "Are you sure, you want to De-activate account ?",
-              "Deactivate",
+              "Delete",
               () {
                 deactivateAccount();
               },

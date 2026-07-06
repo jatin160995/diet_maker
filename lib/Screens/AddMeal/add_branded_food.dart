@@ -364,7 +364,11 @@ class _AddBrandedFoodState extends State<AddBrandedFood> {
           SmallHeading("Food Item"),
           heading(data['name'].toString()),
           SmallHeading("Brand"),
-          heading(data['brand_owner']['name'].toString()),
+          heading(
+            data['brand_owner'] != null
+                ? data['brand_owner']['name'].toString()
+                : "N/A",
+          ),
 
           Divider(color: dividerColor, height: 25),
 
@@ -398,25 +402,25 @@ class _AddBrandedFoodState extends State<AddBrandedFood> {
             ),
           ),
           SizedBox(height: 10),
-          SmallHeading("Avg. Serving Size"),
-          Container(
-            height: 60,
-            padding: EdgeInsets.symmetric(horizontal: 15),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  data['serving_sizes'][selectedSelectedUnit]['serving_value'],
-                ),
-              ],
-            ),
-            decoration: BoxDecoration(
-              color: dividerColor,
-              borderRadius: BorderRadius.all(Radius.circular(15)),
-              border: Border.all(color: dividerColor),
-            ),
-          ),
-          SizedBox(height: 10),
+          // SmallHeading("Avg. Serving Size"),
+          // Container(
+          //   height: 60,
+          //   padding: EdgeInsets.symmetric(horizontal: 15),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text(
+          //         data['serving_sizes'][selectedSelectedUnit]['average_serving_size'],
+          //       ),
+          //     ],
+          //   ),
+          //   decoration: BoxDecoration(
+          //     color: dividerColor,
+          //     borderRadius: BorderRadius.all(Radius.circular(15)),
+          //     border: Border.all(color: dividerColor),
+          //   ),
+          // ),
+          // SizedBox(height: 10),
           SmallHeading("Enter Serving Size"),
           CustomEditText(
             true,

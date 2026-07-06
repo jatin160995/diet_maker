@@ -434,6 +434,19 @@ class _AddFoodWithServingState extends State<AddFoodWithServing> {
       "sub_category_id": 0,
       "variety_id": 0,
     };
+    Map<String, dynamic> mapToSend = {
+      "serving_value": int.parse(servingAmountController.text),
+      "serving_size_unit_id":
+          servingSizesFromServer[selectedUnitMeasurement]['id'],
+      "protein": protein,
+      "carbohydrate": carbs,
+      "fat": fat,
+      "calorie": int.parse(caloriesController.text),
+      "food_nutrients": nutrientsToCollect,
+    };
+    print(dataToPost);
+    print(mapToSend);
+    //return;
 
     try {
       setState(() {

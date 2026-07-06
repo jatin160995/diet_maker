@@ -12,9 +12,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // Kotlin Gradle Plugin
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22") // Check your current Kotlin version
-
+        
         // ADD THIS LINE for Firebase/Google Services
         classpath("com.google.gms:google-services:4.4.0") // Use the latest version
     }

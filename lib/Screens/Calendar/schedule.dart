@@ -352,11 +352,75 @@ class _ScheduleScreenState extends State<ScheduleScreen>
         bottomNavigationBar: SafeArea(
           child: GestureDetector(
             onTap: () async {
-              await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => AddSchedule()),
+              showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    backgroundColor: white,
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => AddSchedule(),
+                            ),
+                          );
+                          fetchSchedules();
+                          Navigator.pop(context);
+                        },
+                        child: Text(
+                          "Continue",
+                          style: TextStyle(color: primaryColor),
+                        ),
+                      ),
+                    ],
+                    content: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.info, color: primaryColor, size: 50),
+                        SizedBox(height: 16.0),
+                        Text(
+                          "Schedules are linked to your meal plans and recorded data.",
+                          style: TextStyle(
+                            color: textDark(),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+                        Text(
+                          "• Deleting a current or past schedule may permanently remove associated adherence history, journal entries and progress photos.",
+                          style: TextStyle(
+                            color: textDark(),
+                            fontSize: 12,
+                            fontFamily: "medium",
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+                        Text(
+                          "• Schedule only the next day or two when you’re confident you’ll follow the meal plan as is.",
+                          style: TextStyle(
+                            color: textDark(),
+                            fontSize: 12,
+                            fontFamily: "medium",
+                          ),
+                        ),
+                        SizedBox(height: 5,),
+                        Text(
+                          "• Changes made to a scheduled meal plan apply to every scheduled day using that meal plan. Only edit a meal plan when you want the change to carry forward. If you eat differently for a meal, mark that meal as Off Plan.",
+                          style: TextStyle(
+                            color: textDark(),
+                            fontSize: 12,
+                            fontFamily: "medium",
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               );
-              fetchSchedules();
             },
             child: Container(
               height: 50,

@@ -41,7 +41,7 @@ class _LoginState extends State<Login> {
   bool isAgreeChecked = false;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  GoogleSignIn _googleSignIn = GoogleSignIn();
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -95,13 +95,14 @@ class _LoginState extends State<Login> {
     FocusManager.instance.primaryFocus?.unfocus();
     final ApiService apiService = ApiService();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    final String? fcmToken = await StorageService.getFcmToken();
     Map<String, dynamic> dataToPost = {
       "email": emailController.text,
       "password": passwordController.text,
       "timezone": currentTimeZone,
       "device": {
         "device_id": await getDeviceId(),
-        "firebase_id": "firebase_token_abc123",
+        "firebase_id": fcmToken,
         "device_type": Platform.isIOS ? "iOS" : "Android",
         "category": "mobile",
       },
@@ -156,6 +157,7 @@ class _LoginState extends State<Login> {
     FocusManager.instance.primaryFocus?.unfocus();
     final ApiService apiService = ApiService();
     final String currentTimeZone = await FlutterTimezone.getLocalTimezone();
+    final String? fcmToken = await StorageService.getFcmToken();
     Map<String, dynamic> dataToPost = {
       "email": email,
       "first_name": firstName,
@@ -165,7 +167,7 @@ class _LoginState extends State<Login> {
       "timezone": currentTimeZone,
       "device": {
         "device_id": await getDeviceId(),
-        "firebase_id": "firebase_token_abc123",
+        "firebase_id": fcmToken,
         "device_type": Platform.isIOS ? "iOS" : "Android",
         "category": "mobile",
       },
@@ -213,6 +215,12 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
+    // if (Platform.isAndroid) {
+    //   _googleSignIn = GoogleSignIn(
+    //     serverClientId:
+    //         '458505580414-itcrc68seih3io7gf5ct4k9r91aor5ff.apps.googleusercontent.com', // Web Client ID
+    //   );
+    // }
     super.initState();
   }
 
