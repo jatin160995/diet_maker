@@ -63,57 +63,86 @@ class _MeasurementChartState extends State<MeasurementChart> {
         series: chartSeriesData
             .map<LineSeries<MeasurementChartData, DateTime>>((seriesData) {
           return LineSeries<MeasurementChartData, DateTime>(
-            name: seriesData['label'],
-            dataSource: seriesData['data'],
-            color: _hexToColor(seriesData['color']),
-            xValueMapper: (MeasurementChartData data, _) => data.date,
-            yValueMapper: (MeasurementChartData data, _) => data.measurement,
-            markerSettings: const MarkerSettings(
-              isVisible: true,
-              shape: DataMarkerType.circle,
-            ),
-            width: 2,
-          );
+  name: seriesData['label'],
+  dataSource: seriesData['data'],
+  color: _hexToColor(seriesData['color']),
+  xValueMapper: (MeasurementChartData data, _) => data.date,
+  yValueMapper: (MeasurementChartData data, _) => data.measurement,
+  emptyPointSettings: const EmptyPointSettings(
+    mode: EmptyPointMode.drop,
+  ),
+  markerSettings: const MarkerSettings(
+    isVisible: true,
+    shape: DataMarkerType.circle,
+  ),
+  width: 2,
+);
+
         }).toList(),
       ),
     );
   }
 
   List<Map<String, dynamic>> parseMeasurementData(
-    dynamic measurementLogsFromServer,
-  ) {
-    List<Map<String, dynamic>> parsedData = [];
+  dynamic measurementLogsFromServer,
+) {
+  List<Map<String, dynamic>> parsedData = [];
 
-    if (measurementLogsFromServer['chart'] != null) {
-      for (var bodyPart in measurementLogsFromServer['chart']) {
-        String label = bodyPart['label'].toString();
-        String lineColor = bodyPart['line_color'];
-        List<dynamic> dataPoints = bodyPart['data'];
+  if (measurementLogsFromServer['chart'] != null) {
+    for (var bodyPart in measurementLogsFromServer['chart']) {
+      String label = bodyPart['label'].toString();
+      String lineColor = bodyPart['line_color'];
+      List<dynamic> dataPoints = bodyPart['data'];
 
-        List<MeasurementChartData> chartData = dataPoints
-            .where((point) => point['log_date'] != null)
-            .map((point) {
-          // Parse the actual date from log_date (e.g., "2024-06-21")
-          DateTime parsedDate = DateTime.tryParse(
-                  point['log_date'].toString()) ??
-              DateTime.now();
+      List<MeasurementChartData> chartData = dataPoints
+          .where((point) {
+            final measurement = point['measurement'];
+            if (measurement == null) return false;
+            final value = (measurement as num).toDouble();
+            return value > 0;
+          })
+          .map((point) {
+            DateTime? parsedDate;
 
-          return MeasurementChartData(
-            date: parsedDate,
-            measurement: (point['measurement'] as num).toDouble(),
-          );
-        }).toList();
+            if (point['log_date'] != null) {
+              parsedDate = DateTime.tryParse(point['log_date'].toString());
+            }
 
-        // Sort by date so lines draw correctly oldest → newest
-        chartData.sort((a, b) => a.date.compareTo(b.date));
+            if (parsedDate == null && point['log_date_formatted'] != null) {
+              try {
+                final temp = DateFormat('MM/dd')
+                    .parse(point['log_date_formatted'].toString());
+                parsedDate = DateTime(
+                  DateTime.now().year,
+                  temp.month,
+                  temp.day,
+                );
+              } catch (_) {}
+            }
 
-        parsedData
-            .add({"label": label, "color": lineColor, "data": chartData});
+            parsedDate ??= DateTime.now();
+
+            return MeasurementChartData(
+              date: parsedDate,
+              measurement: (point['measurement'] as num).toDouble(),
+            );
+          })
+          .toList();
+
+      chartData.sort((a, b) => a.date.compareTo(b.date));
+
+      if (chartData.isNotEmpty) {
+        parsedData.add({
+          "label": label,
+          "color": lineColor,
+          "data": chartData,
+        });
       }
     }
-
-    return parsedData;
   }
+
+  return parsedData;
+}
 
   // Helper to convert hex color (e.g. "#FAD55C") to Flutter Color
   Color _hexToColor(String hex) {

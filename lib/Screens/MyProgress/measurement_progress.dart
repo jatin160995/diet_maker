@@ -123,6 +123,14 @@ class _MeasurementProgressState extends State<MeasurementProgress> {
         _isLoading = false;
       });
       print(data);
+      // TEMP DEBUG — remove after checking
+      if (data['chart'] != null && data['chart'].isNotEmpty) {
+        var firstPoint = data['chart'][0]['data'];
+        if (firstPoint != null && firstPoint.isNotEmpty) {
+          print("DATA POINT KEYS: ${firstPoint[0].keys.toList()}");
+          print("DATA POINT SAMPLE: ${firstPoint[0]}");
+        }
+      }
     } catch (e) {
       if (e is ApiException) {
         showToast(e.message.toString());
