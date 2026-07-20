@@ -98,10 +98,17 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           ChatMemory().messages = _messages;
         });
       } else {
-        _showError("Unexpected response from server.");
+        //_showError("Unexpected response from server.");
+        setState(() {
+          _messages.add({
+            "role": "assistant",
+            "content": data['message'] ?? "...",
+          });
+          ChatMemory().messages = _messages;
+        });
       }
     } catch (e) {
-      _showError("Connection Error");
+      //_showError(data['output_text'] ?? "...");
       debugPrint("Chat error: $e");
     } finally {
       setState(() => _isTyping = false);

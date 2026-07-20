@@ -283,19 +283,19 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 ),
-                SizedBox(height: 15),
-                Container(
-                  decoration: borderRadius(white, 10),
-                  height: 45,
-                  width: 350,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/images/fb.png", height: 30),
-                      heading("    Log in with Facebook"),
-                    ],
-                  ),
-                ),
+                // SizedBox(height: 15),
+                // Container(
+                //   decoration: borderRadius(white, 10),
+                //   height: 45,
+                //   width: 350,
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Image.asset("assets/images/fb.png", height: 30),
+                //       heading("    Log in with Facebook"),
+                //     ],
+                //   ),
+                // ),
                 //Or Section
                 SizedBox(height: 25),
                 Row(

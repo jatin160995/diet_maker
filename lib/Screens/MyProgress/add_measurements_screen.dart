@@ -7,11 +7,12 @@ import 'package:diet_maker/utils/color_utils.dart';
 import 'package:diet_maker/widgets/custom_edit_text.dart';
 import 'package:diet_maker/widgets/small_heading.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class AddMeasurementsScreen extends StatefulWidget {
-  const AddMeasurementsScreen({super.key});
+  final Map<String, dynamic>? editLog;
+
+  const AddMeasurementsScreen({super.key, this.editLog});
 
   @override
   State<AddMeasurementsScreen> createState() => _AddMeasurementsScreenState();
@@ -35,11 +36,77 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
   DateTime _selectedDate = DateTime.now();
   bool _isLoading = false;
 
+  String? prefMeasurement = "Imperial";
+  String? userGender = "Male";
+
   @override
   void initState() {
     super.initState();
     getPrefferedMeasurement();
     _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+    _prefillEditData();
+  }
+
+  void _prefillEditData() {
+    if (widget.editLog == null) return;
+
+    final log = widget.editLog!;
+
+    final String? dateString =
+        log['log_date']?.toString() ?? log['date']?.toString();
+    if (dateString != null && dateString.isNotEmpty) {
+      try {
+        _selectedDate = DateTime.parse(dateString);
+        _dateController.text = DateFormat('dd/MM/yyyy').format(_selectedDate);
+      } catch (_) {}
+    }
+
+    final List items = (log['items'] ?? log['measurements'] ?? []) as List;
+
+    for (final item in items) {
+      final map = Map<String, dynamic>.from(item);
+      final String bodyPart = (map['body_part'] ?? '').toString().trim();
+      final String measurement = (map['measurement'] ?? '').toString();
+
+      switch (bodyPart.toLowerCase()) {
+        case 'neck':
+          _neckController.text = measurement;
+          break;
+        case 'shoulders':
+          _shouldersController.text = measurement;
+          break;
+        case 'chest':
+          _chestController.text = measurement;
+          break;
+        case 'waist':
+          _waistController.text = measurement;
+          break;
+        case 'left arm':
+          _leftArmController.text = measurement;
+          break;
+        case 'right arm':
+          _rightArmController.text = measurement;
+          break;
+        case 'abdominal':
+          _abdominalController.text = measurement;
+          break;
+        case 'hips':
+          _hipsController.text = measurement;
+          break;
+        case 'left thigh':
+          _leftThighController.text = measurement;
+          break;
+        case 'right thigh':
+          _rightThighController.text = measurement;
+          break;
+        case 'left calf':
+          _leftCalfController.text = measurement;
+          break;
+        case 'right calf':
+          _rightCalfController.text = measurement;
+          break;
+      }
+    }
   }
 
   @override
@@ -96,16 +163,15 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
     List<Map<String, dynamic>> items = [];
     int displayOrder = 1;
 
-    // Helper function to add measurements to the list
     void addMeasurement(
       String bodyPart,
       TextEditingController controller,
       int order,
     ) {
-      if (controller.text.isNotEmpty) {
+      if (controller.text.trim().isNotEmpty) {
         items.add({
           "body_part": bodyPart,
-          "measurement": controller.text,
+          "measurement": controller.text.trim(),
           "display_order": order,
         });
       }
@@ -138,8 +204,8 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
       "items": items,
     };
 
-    print("Add Measurements Payload: $mapToSend");
-    //return;
+    print("Measurement Payload: $mapToSend");
+
     try {
       Map response = await apiService.postWithToken(
         addMeasurementLogs,
@@ -147,9 +213,14 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
       );
 
       print("Response: $response");
-      showToast("Measurements added successfully.");
+      showToast(
+        widget.editLog == null
+            ? "Measurements added successfully."
+            : "Measurements updated successfully.",
+      );
+
       if (mounted) {
-        Navigator.pop(context); // Close the screen on success
+        Navigator.pop(context, true);
       }
     } catch (e) {
       if (e is ApiException) {
@@ -169,8 +240,6 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
     }
   }
 
-  String? prefMeasurement = "Imperial";
-  String? userGender = "Male";
   getPrefferedMeasurement() async {
     prefMeasurement =
         (await StorageService.getLoginData())?.profile.preferredMeasurement;
@@ -186,13 +255,14 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("Add Measurements"),
+          title: Text(widget.editLog == null ? "Add Measurements" : "Edit Measurements"),
           backgroundColor: backgroundColor(),
         ),
-        bottomNavigationBar:
-            _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : ElevatedButton(
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : ElevatedButton(
                   onPressed: _addMeasurementsToServer,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
@@ -201,15 +271,16 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  child: const Text(
-                    "Save",
-                    style: TextStyle(
+                  child: Text(
+                    widget.editLog == null ? "Save" : "Update",
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
                   ),
                 ),
+        ),
         body: SingleChildScrollView(
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           padding: const EdgeInsets.all(16.0),
@@ -239,16 +310,13 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
                   _dateController,
                   TextInputType.datetime,
                   "DD/MM/YYYY",
-                  //onTap: () => ,
                   readOnly: true,
                 ),
               ),
               const SizedBox(height: 20),
               Text(
-                "Measurements (" +
-                    ((prefMeasurement == "Imperial") ? "Inch" : "cm") +
-                    ")",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                "Measurements (${(prefMeasurement == "Imperial") ? "Inch" : "cm"})",
+                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               _buildMeasurementField("Neck", _neckController),
@@ -287,9 +355,6 @@ class _AddMeasurementsScreenState extends State<AddMeasurementsScreen> {
             controller,
             const TextInputType.numberWithOptions(decimal: true),
             "Your $label Size",
-            // inputFormatters: [
-            //   FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
-            // ],
           ),
         ],
       ),

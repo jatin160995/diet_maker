@@ -115,6 +115,9 @@ class ApiService {
       await _handleUnauthorized();
       return showToast("Session expired. Please login again.");
     }
+    if (response.statusCode == 429) {
+      return json.decode(response.body);
+    }
     if (response.statusCode == 200 || response.statusCode == 201) {
       return json.decode(response.body);
     } else {

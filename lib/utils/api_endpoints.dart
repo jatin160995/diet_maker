@@ -1,4 +1,4 @@
-String baseUrl = "https://www.demo.dietmaker.com/api/";
+String baseUrl = "https://www.dietmaker.com/api/";
 
 //User
 String login = "client/login";
@@ -80,6 +80,8 @@ String getWeightLogs = "diet/progress/weight";
 String getMeasurementLogs = "diet/progress/body-measurement";
 String getAdherenceLogs = "diet/progress/adherence";
 String getComparePhotos = "diet/progress/compare-photo";
+const String deleteWeight = "diet/weight-logs";
+const String deleteMeasurementLogs = "diet/body-measurement-logs";
 
 // add data
 String addWeight = "diet/weight-logs";

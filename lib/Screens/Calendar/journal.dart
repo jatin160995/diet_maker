@@ -225,6 +225,7 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
 
   imageWidget(String title) {
     String imageUrl = "";
+     String imageId = "";
     if (imagesForSchedules[selectedScheduleId.toString()] != null) {
       final selectedDateData = imagesForSchedules[selectedScheduleId.toString()]
           .firstWhere(
@@ -240,16 +241,18 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
         //imageUrl = image[0]['photo_url'];
         if (image['type'] != "noImage") {
           imageUrl = image['photo_url'];
+         // showToast(selectedDateData.toString());
         } else {
           imageUrl = "";
         }
         print(imageUrl);
-      }
+      } 
     }
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          _showImageSourceOptions(title);
+          
+          _showImageSourceOptions(title, imageUrl);
         },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,9 +438,9 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
     }
   }
 
-  Future<String?> showAddJournalDialog(BuildContext context) async {
+  Future<String?> showAddJournalDialog(BuildContext context, {String journal = ""} ) async {
     TextEditingController _controller = TextEditingController();
-
+_controller.text = journal;
     showDialog(
       context: context,
       barrierDismissible: true,
@@ -471,6 +474,7 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
                 child: TextField(
                   controller: _controller,
                   maxLines: 3,
+                  
                   decoration: InputDecoration(
                     hintText: "Write here...",
                     border: OutlineInputBorder(),
@@ -550,11 +554,19 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
             children: [
               SizedBox(height: 15),
               SmallHeading("Journal"),
-              Text(
-                journalForSelectedDate['note'] == null
-                    ? "N/A"
-                    : journalForSelectedDate['note'],
-                style: TextStyle(fontSize: 15, color: textDark()),
+              Row(
+               children: [Expanded(
+                 child: Text(
+                    journalForSelectedDate['note'] == null
+                        ? "N/A"
+                        : journalForSelectedDate['note'],
+                    style: TextStyle(fontSize: 15, color: textDark()),
+                  ),
+               ),
+                IconButton(onPressed: () async {final result = await showAddJournalDialog(context, journal: journalForSelectedDate['note'] == null
+                      ? "N/A"
+                      : journalForSelectedDate['note']);}, icon: Icon(Icons.edit,color: darkText,))
+                ],
               ),
             ],
           ),
@@ -761,7 +773,7 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
   }
 
   /// Show options dialog
-  void _showImageSourceOptions(String type) {
+  void _showImageSourceOptions(String type, String imageUrl) {
     showModalBottomSheet(
       context: context,
       builder: (context) {
@@ -784,11 +796,79 @@ class _MyJournalState extends State<MyJournal> with RouteAware {
                   _captureImageFromCamera(type);
                 },
               ),
+            // imageUrl == "" ? Container():  ListTile(
+            //     leading: Icon(Icons.delete, color: Colors.red,),
+            //     title: Text("Delete Photo", style: TextStyle(color: Colors.red),),
+            //     onTap: () {
+            //       Navigator.pop(context);
+            //       _confirmDeleteMeasurement(context);
+            //     },
+            //   ),
             ],
           ),
         );
       },
     );
+  }
+
+  void _confirmDeleteMeasurement(dynamic id) {
+    if (id == null) {
+      showToast("Measurement log id not found");
+      return;
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text("Delete Image journal"),
+          content: const Text("Are you sure you want to delete this image journal?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.pop(context);
+                 await _deleteImageLog(id);
+              },
+              child: const Text(
+                "Delete",
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _deleteImageLog(dynamic id) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    final ApiService apiService = ApiService();
+
+    try {
+      setState(() {
+        _isLoading = true;
+      });
+
+      await apiService.deleteWithToken("$logPhotos/$id", {});
+
+      showToast("Measurement deleted successfully");
+      
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (e is ApiException) {
+        showToast(e.message.toString());
+        debugPrint("API Error: ${e.message}, status: ${e.code}");
+      } else {
+        debugPrint("Unexpected error: $e");
+      }
+    }
   }
 
   // sendValuesToServer() async {
