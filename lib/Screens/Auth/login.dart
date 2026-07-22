@@ -24,6 +24,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -42,6 +43,41 @@ class _LoginState extends State<Login> {
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  Future<void> signInWithApple() async {
+    try {
+      final credential = await SignInWithApple.getAppleIDCredential(
+        scopes: [
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
+        ],
+      );
+
+      // Apple only returns name/email on the FIRST authorization ever.
+      // On subsequent logins these will be null, so we fall back gracefully.
+      String firstName = credential.givenName ?? "";
+      String lastName = credential.familyName ?? "";
+      String email =
+          credential.email ??
+          "${credential.userIdentifier}@privaterelay.appleid.com";
+
+      if (email.isEmpty) {
+        showToast("Something went wrong with Apple Sign-In");
+        return;
+      }
+
+      _loginUserWithSocial(
+        email,
+        firstName,
+        lastName,
+        credential.userIdentifier ?? "",
+        "Apple",
+      );
+    } catch (e) {
+      print("Apple Sign-In Error: $e");
+      showToast("Apple Sign-In was cancelled or failed");
+    }
+  }
 
   Future<User?> signInWithGoogle() async {
     try {
@@ -277,12 +313,44 @@ class _LoginState extends State<Login> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/images/google.png", height: 30),
-                        heading("    Log in with Google"),
+                        Image.asset("assets/images/google.png", height: 20),
+                        SizedBox(width: 8),
+                        heading("Log in with Google"),
                       ],
                     ),
                   ),
                 ),
+                SizedBox(height: 15),
+                if (Platform.isIOS)
+                  GestureDetector(
+                    onTap: () async {
+                      await signInWithApple();
+                    },
+                    child: Container(
+                      decoration: borderRadius(Colors.black, 10),
+                      height: 45,
+                      width: 350,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/apple_logo.png",
+                            height: 20,
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            "Sign in with Apple",
+                            style: TextStyle(
+                              fontSize: 17, // smaller
+                              fontWeight: FontWeight.w700, // bolder
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                if (Platform.isIOS) SizedBox(height: 15),
                 // SizedBox(height: 15),
                 // Container(
                 //   decoration: borderRadius(white, 10),
