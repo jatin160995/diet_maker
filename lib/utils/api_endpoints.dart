@@ -1,4 +1,5 @@
-String baseUrl = "https://www.dietmaker.com/api/";
+//String baseUrl = "https://www.dietmaker.com/api/";
+String baseUrl = "https://admin.dietmaker.com/api/";
 
 //User
 String login = "client/login";

@@ -43,11 +43,11 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>This allows you to capture photos within the app.</string>
+	<string>Diet Maker uses your camera to scan barcodes on packaged foods to quickly look up their nutrition information, take progress photos (front, back, and side views) to track body changes over time, and take a profile picture.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This allows you to record audio as part of your experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>This allows you to choose photos from your library to use in the app.</string>
+	<string>Diet Maker accesses your photo library so you can select existing photos to use as your profile picture or as progress photos for tracking your fitness journey.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

@@ -24,8 +24,8 @@ android {
         applicationId = "com.sm.dietmaker"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = 37
+        versionName = "37.0"
     }
 
     buildTypes {

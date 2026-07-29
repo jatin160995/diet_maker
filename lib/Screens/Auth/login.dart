@@ -341,7 +341,7 @@ class _LoginState extends State<Login> {
                           Text(
                             "Sign in with Apple",
                             style: TextStyle(
-                              fontSize: 17, // smaller
+                              fontSize: 17,
                               fontWeight: FontWeight.w700, // bolder
                               color: Colors.white,
                             ),
