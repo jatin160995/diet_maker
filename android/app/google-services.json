@@ -22,6 +22,22 @@
           }
         },
         {
+          "client_id": "185253795624-9ngbhk279ec7iurm6j0m2ngv069su3sr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sm.dietmaker",
+            "certificate_hash": "49e276696b2e055f0047be8560eefc91c3fa5d34"
+          }
+        },
+        {
+          "client_id": "185253795624-gikfk13qeh0a0sdbc6p0t070qk539aoe.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sm.dietmaker",
+            "certificate_hash": "27a5d4a4d52563bfbaacc4c273417f4a7c893622"
+          }
+        },
+        {
           "client_id": "185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com",
           "client_type": 3
         }

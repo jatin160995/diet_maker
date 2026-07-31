@@ -835,7 +835,7 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
                             ],
                           ),
                         ),
-                        /*-----------------------Fats------------------*/
+                        /*-----------------------Calories------------------*/
                         Container(
                           margin: EdgeInsets.only(top: 20),
                           decoration: borderRadius(white, 10),
@@ -1280,7 +1280,7 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
       });
 
       Map data = await apiService.getWithToken(nutrientsVariable, {});
-      // showToast(data.toString());
+
       setState(() {
         proteinPer = (data['proteinPer'] ?? proteinPer).toDouble();
         carbsPer = (data['carbsPer'] ?? carbsPer).toDouble();
@@ -1300,6 +1300,10 @@ class _MyNutritionTargetState extends State<MyNutritionTarget> {
 
         minFatsPer = (data['minFatsPer'] ?? minFatsPer).toDouble();
         maxFatsPer = (data['maxFatsPer'] ?? maxFatsPer).toDouble();
+
+        // caloriesToMaintain =
+        //     (data['minimum_calorie'] ?? caloriesToMaintain).toInt();
+        // showToast(caloriesToMaintain.toString());
       });
     } catch (e) {
       if (e is ApiException) {

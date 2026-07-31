@@ -483,6 +483,7 @@ class _Signup2State extends State<Signup2> {
 
     Map<String, dynamic> dataToPost = {
       "avg_calorie_to_maintain_weight": calories,
+      "daily_calorie_intake": calories,
     };
     //print(dataToPost);
     //return;

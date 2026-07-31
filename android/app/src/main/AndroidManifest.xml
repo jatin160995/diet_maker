@@ -15,9 +15,9 @@
         android:icon="@mipmap/launcher_icon">
 
         <!-- Google Sign-In Client ID -->
-        <meta-data
+        <!-- <meta-data
             android:name="com.google.android.gms.client_id"
-            android:value="458505580414-g2ft363fvg2ljtkv96v5bjvqia8jaci2.apps.googleusercontent.com"/>
+            android:value="458505580414-g2ft363fvg2ljtkv96v5bjvqia8jaci2.apps.googleusercontent.com"/> -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
