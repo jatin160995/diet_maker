@@ -15,7 +15,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.sm.dietmaker"
+    namespace = "com.diet.dietmaker"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -30,11 +30,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.sm.dietmaker"
+        applicationId = "com.diet.dietmaker"
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = 40
-        versionName = "37.3"
+        versionCode = 2
+        versionName = "1.2"
     }
 
     signingConfigs {

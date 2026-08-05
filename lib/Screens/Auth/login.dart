@@ -42,7 +42,7 @@ class _LoginState extends State<Login> {
   bool isAgreeChecked = false;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  late GoogleSignIn _googleSignIn;
 
   Future<void> signInWithApple() async {
     try {
@@ -251,18 +251,8 @@ class _LoginState extends State<Login> {
 
   @override
   void initState() {
-    // if (Platform.isAndroid) {
-    //   _googleSignIn = GoogleSignIn(
-    //     serverClientId:
-    //         '458505580414-itcrc68seih3io7gf5ct4k9r91aor5ff.apps.googleusercontent.com', // Web Client ID
-    //   );
-    // }
-    _googleSignIn = GoogleSignIn(
-      scopes: ['email'],
-      serverClientId:
-          '185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com', // client_type: 3 from your google-services.json
-    );
     super.initState();
+    _googleSignIn = GoogleSignIn(scopes: ['email']);
   }
 
   @override

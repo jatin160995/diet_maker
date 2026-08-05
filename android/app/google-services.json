@@ -7,28 +7,73 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:185253795624:android:c8ef1c068d2d05b6c2621d",
+        "mobilesdk_app_id": "1:185253795624:android:98d2ea42fea8c126c2621d",
+        "android_client_info": {
+          "package_name": "com.diet.dietmaker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "185253795624-elpkmvarimvt8knaphttsrdgfban9li8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diet.dietmaker",
+            "certificate_hash": "eb6be6599f47761b09f07ba999f5d77dfebcd09f"
+          }
+        },
+        {
+          "client_id": "185253795624-g2ui6nug9ld6l0fa4av4jd34ieeguoso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diet.dietmaker",
+            "certificate_hash": "49e276696b2e055f0047be8560eefc91c3fa5d34"
+          }
+        },
+        {
+          "client_id": "185253795624-kftvcs9qvpkjn7l24nqu9g8gkqh0p03l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.diet.dietmaker",
+            "certificate_hash": "1a9caa8e5328e44e0c2aa1312b37689623401979"
+          }
+        },
+        {
+          "client_id": "185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBN3hCuIhosCMJEsoNgir36MWbHCqTl2JI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "185253795624-ok6mli4e4tpdg2879op9tvht6epg9mlo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "185253795624-9ai86up7a4qotk7ckah5k1ke9isp3oce.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sm.dietmaker",
+                "app_store_id": "1591384918"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185253795624:android:52db3dc188fe0ad0c2621d",
         "android_client_info": {
           "package_name": "com.sm.dietmaker"
         }
       },
       "oauth_client": [
-        {
-          "client_id": "185253795624-0vdvsaq47etc32nkps4rbohhn2pf76nq.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sm.dietmaker",
-            "certificate_hash": "5d2177d920e884095b6196d7bf55c8d2f1b80e31"
-          }
-        },
-        {
-          "client_id": "185253795624-9ngbhk279ec7iurm6j0m2ngv069su3sr.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.sm.dietmaker",
-            "certificate_hash": "49e276696b2e055f0047be8560eefc91c3fa5d34"
-          }
-        },
         {
           "client_id": "185253795624-gikfk13qeh0a0sdbc6p0t070qk539aoe.apps.googleusercontent.com",
           "client_type": 1,
