@@ -25,6 +25,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -113,6 +114,50 @@ class _LoginState extends State<Login> {
     }
   }
 
+  Future<void> signInWithFacebook() async {
+    try {
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'],
+      );
+
+      if (result.status == LoginStatus.success) {
+        final userData = await FacebookAuth.instance.getUserData(
+          fields: "name,email,first_name,last_name",
+        );
+
+        final String email = userData['email'] ?? "";
+        final String firstName = userData['first_name'] ?? "";
+        final String lastName = userData['last_name'] ?? "";
+        final String facebookId = userData['id']?.toString() ?? "";
+
+        if (email.isEmpty) {
+          showToast("We couldn't get an email from Facebook for this account");
+          return;
+        }
+
+        _loginUserWithSocial(
+          email,
+          firstName,
+          lastName,
+          facebookId,
+          "Facebook",
+          // TODO: confirm the key the backend expects for this once the
+          // /api/client/login contract is updated to verify the Facebook
+          // access token server-side.
+          //socialAccessToken: result.accessToken?.tokenString,
+        );
+      } else if (result.status == LoginStatus.cancelled) {
+        // User closed the Facebook dialog - nothing to show.
+      } else {
+        print("Facebook Sign-In Error: ${result.message}");
+        showToast("Facebook Sign-In failed: ${result.message}");
+      }
+    } catch (e) {
+      print("Facebook Sign-In Error: $e");
+      showToast("Facebook Sign-In was cancelled or failed");
+    }
+  }
+
   Future<String> getDeviceId() async {
     final deviceInfo = DeviceInfoPlugin();
 
@@ -148,7 +193,7 @@ class _LoginState extends State<Login> {
         _isLoading = true;
       });
       Map data = await apiService.post(login, dataToPost);
-
+      print(data);
       setState(() async {
         LoginResponse response = LoginResponse(
           profile: UserProfile.fromJson(data['profile']),
@@ -189,6 +234,7 @@ class _LoginState extends State<Login> {
     String lastName,
     String providerId,
     String provider,
+    //String? socialAccessToken,
   ) async {
     FocusManager.instance.primaryFocus?.unfocus();
     final ApiService apiService = ApiService();
@@ -201,6 +247,7 @@ class _LoginState extends State<Login> {
       "provider_id": providerId,
       "provider": provider, // Facebook, Google, Apple
       "timezone": currentTimeZone,
+      //if (socialAccessToken != null) "provider_token": socialAccessToken,
       "device": {
         "device_id": await getDeviceId(),
         "firebase_id": fcmToken,
@@ -346,19 +393,24 @@ class _LoginState extends State<Login> {
                     ),
                   ),
                 if (Platform.isIOS) SizedBox(height: 15),
-                // SizedBox(height: 15),
-                // Container(
-                //   decoration: borderRadius(white, 10),
-                //   height: 45,
-                //   width: 350,
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.center,
-                //     children: [
-                //       Image.asset("assets/images/fb.png", height: 30),
-                //       heading("    Log in with Facebook"),
-                //     ],
-                //   ),
-                // ),
+                SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () async {
+                    await signInWithFacebook();
+                  },
+                  child: Container(
+                    decoration: borderRadius(white, 10),
+                    height: 45,
+                    width: 350,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset("assets/images/fb.png", height: 30),
+                        heading("    Log in with Facebook"),
+                      ],
+                    ),
+                  ),
+                ),
                 //Or Section
                 SizedBox(height: 25),
                 Row(

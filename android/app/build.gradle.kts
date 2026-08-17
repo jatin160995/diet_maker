@@ -32,9 +32,9 @@ android {
     defaultConfig {
         applicationId = "com.diet.dietmaker"
         minSdk = flutter.minSdkVersion
-        targetSdk = flutter.targetSdkVersion
-        versionCode = 2
-        versionName = "1.2"
+        targetSdk = 36
+        versionCode = 3
+        versionName = "1.3"
     }
 
     signingConfigs {
